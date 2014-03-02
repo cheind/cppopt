@@ -75,21 +75,3 @@ int main() {
     
     return 0;
 }
-
-/*
- {
- typedef InputOutputTraits<float, 1, 1, 1, 1> IOT;
- typedef Function<float, IOT> F;
- typedef Function<float, IOT> DF;
- 
- F f([](const F::X &x) -> F::Y {typename F::Y y(1); y << sinf(x(0)); return y;});
- DF d([](const DF::X &x) -> DF::Y {typename DF::Y y(1); y << cosf(x(0)); return y;});
- 
- typename F::X x(1);
- x << 3.f;
- 
- newton(f, d, x);
- std::cout << x << " " << f(x) << std::endl;
- newton(f, d, x);
- std::cout << x << " " << f(x) << std::endl;
- }*/

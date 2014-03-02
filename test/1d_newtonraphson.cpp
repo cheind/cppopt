@@ -40,7 +40,7 @@ int main() {
     };
     
     cppopt::Matrix x(1, 1);
-    x(0) = 2.f;
+    x(0) = 2.f; // Try to start with 0 and you fill find a maximum.
     
     // Iterate while norm of residual is greater than a user-selected threshold.
     while (df(x).norm() > 0.001f) {

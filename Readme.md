@@ -1,4 +1,6 @@
-# cppopt - Numerical optimization in C++11
+# cppopt
+
+cppopt is lightweight library for numerical optimisation in C++11. The main focus of this library is to provide a concise and easy to follow implementation of various optimisation algorithms.
 
 Please bear with me until i come up with a good introduction into this library.
 

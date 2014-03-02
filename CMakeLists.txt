@@ -15,3 +15,4 @@ include_directories(../eigen)
 include_directories(inc)
 
 add_executable(fitcircle_gaussnewton ${CPPOPT_HEADERS} test/fitcircle_gaussnewton.cpp)
+add_executable(curve_newtonraphson ${CPPOPT_HEADERS} test/curve_newtonraphson.cpp)

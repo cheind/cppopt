@@ -12,27 +12,25 @@
 #include <iomanip>
 
 /*
- This example optimizes f(x) = 3x^3 - 10x^2 - 56x + 5 with start value x = 2.
+ This example optimizes f(x,y) = x^2 + y^2 + 2x + 8y which has a global minimum at (-1, -4). Since we use 
+ Newton-Raphson for optimization, we need the first and second order derivatives, which are
  
- Note that
-    f'(x)  = 9x^2 - 20x - 56
-    f''(x) = 18x - 20
- */
+    First order (Gradient)
+    df/dx = 2x + 2
+    df/dy = 2y + 8
 
-// x^2 + y^2 + 2x + 8y
-// df(x,y)/dx = 2x + 2
-// df(x,y)/dy = 2y + 8
-//
-// ddf/ddx = 2
-// ddf/dxdy = 0
-// ddf/dydx = 0
-// ddf/ddy = 2
+    Second order (Hessian matrix)
+    ddf/ddx = 2
+    ddf/dxdy = 0
+    ddf/dydx = 0
+    ddf/ddy = 2
+ 
+ As the second order derivative is constant, the optimization will complete in a single step.
+ */
 
 
 
 int main() {
-    
-    
 
     cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
         cppopt::Matrix d(2, 1);
@@ -66,8 +64,6 @@ int main() {
             << "Parameters: " << x.transpose()
             << " Error: " << df(x).norm() << std::endl;
     }
-    
-    //std::cout << "Found a " << (ddf(x)(0) < 0.f ? "Maximum" : "Minimum") << std::endl;
     
     return 0;
 }

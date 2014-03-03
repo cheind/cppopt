@@ -50,7 +50,7 @@ int main() {
         cppopt::Matrix d(p.rows(), x.rows());
         
         for (int i = 0; i < d.rows(); ++i) {
-            typename cppopt::Scalar denom = 2 * sqrtf(powf(x(0)-p(i, 0), 2.f) + powf(x(1)-p(i, 1), 2.f));
+            cppopt::Scalar denom = 2 * sqrtf(powf(x(0)-p(i, 0), 2.f) + powf(x(1)-p(i, 1), 2.f));
             d(i, 0) = (2.f*(p(i, 0) - x(0))) / denom;
             d(i, 1) = (2.f*(p(i, 1) - x(1))) / denom;
             d(i, 2) = 1;

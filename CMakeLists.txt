@@ -15,7 +15,8 @@ set(CPPOPT_HEADERS
 include_directories(../eigen)
 include_directories(inc)
 
-add_executable(nlls_gaussnewton ${CPPOPT_HEADERS} test/nlls_gaussnewton.cpp)
 add_executable(2d_gradientdescent ${CPPOPT_HEADERS} test/2d_gradientdescent.cpp)
 add_executable(1d_newtonraphson ${CPPOPT_HEADERS} test/1d_newtonraphson.cpp)
 add_executable(2d_newtonraphson ${CPPOPT_HEADERS} test/2d_newtonraphson.cpp)
+add_executable(nlls_gaussnewton_fitcircle ${CPPOPT_HEADERS} test/nlls_gaussnewton_fitcircle.cpp)
+add_executable(nlls_gaussnewton_alignpoints ${CPPOPT_HEADERS} test/nlls_gaussnewton_alignpoints.cpp)

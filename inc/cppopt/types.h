@@ -26,6 +26,12 @@ namespace cppopt {
     
     // Function prototype
     typedef std::function< Matrix(const Matrix &x) > F;
+
+    // Compution result info
+    enum ResultInfo {
+        SUCCESS,
+        ERROR
+    };
 }
 
 #endif

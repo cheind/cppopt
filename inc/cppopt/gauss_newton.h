@@ -12,19 +12,28 @@
 #define CPPOPT_GAUSS_NEWTON
 
 #include "types.h"
+#include <iostream>
 
 namespace cppopt {
-    
-    
-    void gaussNewton(const F &f, const F &d, Matrix &x) {
+        
+    ResultInfo gaussNewton(const F &f, const F &d, Matrix &x) {
         Matrix j = d(x);
         assert(j.rows() >= j.cols());
         
         Matrix jt = j.transpose();
         Matrix y = f(x);
-        Matrix s = (jt * j).llt().solve(jt * y * Scalar(-1));
-        
+
+        // Cholesky decomposition
+        auto llt = (jt * j).ldlt();
+
+        if (llt.info() != Eigen::Success) {
+            return ERROR;
+        }
+
+        Matrix s = llt.solve(jt * y * Scalar(-1));        
         x = x + s;
+
+        return SUCCESS;
     }
 }
 

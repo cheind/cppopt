@@ -54,17 +54,22 @@ int main() {
         AffineTransform2D t;
         t.setIdentity();
         t.rotate(x(0));
+
+        AffineTransform2D dt;
+        dt.matrix() << -sinf(x(0)), -cosf(x(0)), 0,
+                       cosf(x(0)), -sinf(x(0)), 0,
+                       0, 0, 1;
         
         for (int i = 0; i < d.rows(); ++i) {
             Eigen::Vector2f m = mp.row(i);
             Eigen::Vector2f s = sp.row(i);
+            Eigen::Vector2f k = m - t * s;
+            Eigen::Vector2f kd = dt * s * -1.f;
 
-            cppopt::Scalar denom = -2.f * (m - t * s).norm();
+            cppopt::Scalar nom = (k.transpose() * kd + kd.transpose() * k)(0);
+            cppopt::Scalar denom = -2.f * k.norm();
             
-            d(i, 0) = (2.f * (m(0) - s(0)*cosf(x(0)) + s(1)*sinf(x(0))) * (s(0)*sinf(x(0)) + s(1)*cosf(x(0)))) +
-                      (2.f * (m(1) - s(0)*sinf(x(0)) - s(1)*cosf(x(0))) * (-s(0)*cosf(x(0)) + s(1)*sinf(x(0))));
-            d(i, 0) /= denom;
-            
+            d(i, 0) = nom / denom;            
         }        
         
         return d;

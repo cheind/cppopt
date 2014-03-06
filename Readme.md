@@ -12,3 +12,8 @@ http://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf
 http://www.itl.nist.gov/div898/handbook/pmd/section1/pmd143.htm
 http://www.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf
 http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.47.8633&rep=rep1&type=pdf
+http://www2.imm.dtu.dk/pubdb/views/edoc_download.php/3215/pdf/imm3215.pdf
+
+Convergence issues:
+https://support.sas.com/documentation/cdl/en/etsug/60372/HTML/default/viewer.htm#etsug_model_sect039.htm
+http://www.trentfguidry.net/post/2009/08/12/Nonlinear-Least-Squares-Regression-Levenberg-Marquardt.aspx

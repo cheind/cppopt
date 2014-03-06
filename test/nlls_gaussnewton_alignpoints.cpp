@@ -21,11 +21,10 @@ int main() {
     
     // The scene points will be a translated and rotated version of the model points plus some optional noise.
     typedef Eigen::Transform<cppopt::Scalar, 2, Eigen::Affine> AffineTransform2D;
-    //AffineTransform2D torig = Eigen::Translation2f(2.f, 2.f) * Eigen::Rotation2Df(0.0f);
     AffineTransform2D torig;
     torig.setIdentity();
-    torig.translate(Eigen::Vector2f(2.f, 2.f));
-
+    torig.rotate(0.3f);
+    
     cppopt::Matrix sp(20, 2);
     for (int i = 0; i < mp.rows(); ++i) {
         sp.row(i) = torig * Eigen::Vector2f(mp.row(i));
@@ -37,7 +36,7 @@ int main() {
 
         AffineTransform2D t;
         t.setIdentity();
-        t.translate(Eigen::Vector2f(x(0), x(1)));//Eigen::Translation2f(x(0), x(1))); //* Eigen::Rotation2Df(0);
+        t.rotate(x(0));
 
         for (int i = 0; i < y.rows(); ++i) {
             Eigen::Vector2f m = mp.row(i);
@@ -51,49 +50,20 @@ int main() {
     // Define the Jacobian of the residual function
     cppopt::F df = [&mp, &sp](const cppopt::Matrix &x) -> cppopt::Matrix {
         cppopt::Matrix d(mp.rows(), x.rows());
-
        
-        //AffineTransform2D t = Eigen::Translation2f(x(0), x(1)) * Eigen::Rotation2Df(0);
         AffineTransform2D t;
         t.setIdentity();
-        t.translate(Eigen::Vector2f(x(0), x(1)));
+        t.rotate(x(0));
         
-         /*
-        AffineTransform2D td_dth;
-        td_dth.matrix() << -sinf(x(0)), -cosf(x(0)), 0
-                         , cosf(x(0)), -sinf(x(0)), 0
-                         , 0, 0, 1;
-
-        AffineTransform2D td_dtx;
-        td_dtx.matrix() << 0, 0, 1
-                         , 0, 0, 0
-                         , 0, 0, 1;
-
-        AffineTransform2D td_dty;
-        td_dty.matrix() << 0, 0, 0
-                         , 0, 0, 1
-                         , 0, 0, 1;
-        */
-
         for (int i = 0; i < d.rows(); ++i) {
             Eigen::Vector2f m = mp.row(i);
             Eigen::Vector2f s = sp.row(i);
-            //Eigen::Vector2f st = t * s;
-            //Eigen::Vector2f sdt_dth = td_dth * st;
-            //Eigen::Vector2f sdt_dtx = td_dtx * st;
-            //Eigen::Vector2f sdt_dty = td_dty * st;
 
-            cppopt::Scalar denom = (m - t * s).norm();
+            cppopt::Scalar denom = -2.f * (m - t * s).norm();
             
-            // df/dtheta f = sqrt(|m - R(theta)s|)
-            
-            /*
             d(i, 0) = (2.f * (m(0) - s(0)*cosf(x(0)) + s(1)*sinf(x(0))) * (s(0)*sinf(x(0)) + s(1)*cosf(x(0)))) +
                       (2.f * (m(1) - s(0)*sinf(x(0)) - s(1)*cosf(x(0))) * (-s(0)*cosf(x(0)) + s(1)*sinf(x(0))));
-            */
-            //d(i,0) = 0;
-            d(i, 0) = (m(0) - s(0) - x(0)) / denom; 
-            d(i, 1) = (m(1) - s(1) - x(1)) / denom; 
+            d(i, 0) /= denom;
             
         }        
         
@@ -101,26 +71,30 @@ int main() {
     };
 
     // Create start solution
-    cppopt::Matrix x(2, 1);
-    x << 0.0f, 0.f;
+    cppopt::Matrix x(1, 1);
+    x << 0.0f;
     
     // Iterate while norm of residual is greater than a user-selected threshold.
-    int i = 0;
-    while ( i < 3) {
-        cppopt::gaussNewton(f, df, x);
+    cppopt::ResultInfo ri = cppopt::SUCCESS;
+    while (ri == cppopt::SUCCESS && f(x).norm() > 0.0001f) {
+        ri = cppopt::gaussNewton(f, df, x);
         std::cout
             << std::fixed << std::setw(3)
             << "Parameters: " << x.transpose()
             << " Error: " << f(x).norm() << std::endl;
-        ++i;
     }
 
-    /*
-    AffineTransform2D tfinal = Eigen::Translation2f(x(1), x(2)) * Eigen::Rotation2Df(x(0));
-    // We are actually searching for the inverse of torig i.e the matrix that brings back the 
-    // transformed scenepoints into alignment with the model points.
-    std::cout << (torig * tfinal).matrix() << std::endl;
-    */
+    if (ri == cppopt::SUCCESS) {
+        AffineTransform2D tfinal;
+        tfinal.setIdentity();
+        tfinal.rotate(x(0));
+
+        std::cout << "The following matrix should be close to identity." << std::endl;
+        std::cout << (torig * tfinal).matrix() << std::endl;
+    } else {
+        std::cout << "Failed to compute." << std::endl;
+    }
+
     return 0;
     
 }

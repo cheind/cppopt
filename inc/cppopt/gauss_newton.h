@@ -30,21 +30,25 @@ namespace cppopt {
      *  The Gauss-Newton avoids direct calculation of the Hessian matrix and instead approximates
      *  the Hessian matrix.
      *
-     *  \param f Residual function.
-     *  \param d Jacobian matrix.
-     *  \param x Variables of the function. Will be modified in case of success.
-     *  \return Status indicating success or failure due to ill-conditioned input.  
+     *  \param f Function object evaluating the residuals at x.
+     *           Input: variables given as vector of size Nx1.
+     *           Output: function values given as vector of size Mx1.
+     *  \param d First order partial derivatives of f at x.
+     *           Input: variables given as vector of size Nx1.
+     *           Output: all partial derivates of f at x given as matrix of size MxN.
+     *  \param x Variables of function f given as vector of size Nx1 vector. Will be updated in case of success.
+     *  \return Status indicating success or failure due to ill-conditioned input.
      */
     ResultInfo gaussNewton(const F &f, const F &d, Matrix &x) {
         Matrix j = d(x);
+        
+        // Make sure we have more functions than variables.
         assert(j.rows() >= j.cols());
         
         Matrix jt = j.transpose();
         Matrix y = f(x);
 
-        // Cholesky decomposition
         auto llt = (jt * j).ldlt();
-
         if (llt.info() != Eigen::Success) {
             return ERROR;
         }

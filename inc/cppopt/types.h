@@ -30,6 +30,7 @@ namespace cppopt {
     // Compution result info
     enum ResultInfo {
         SUCCESS,
+        INVALID_INPUT,
         ERROR
     };
 }

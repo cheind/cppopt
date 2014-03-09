@@ -11,19 +11,25 @@
 #include <iostream>
 #include <iomanip>
 
-/*
- This example optimizes f(x,y) = x^2 + y^2 + 2x + 8y which has a global minimum at (-1, -4).
- 
- First order (Gradient)
- df/dx = 2x + 2
- df/dy = 2y + 8
- 
+/** This example finds a local extremum of a second order multivariate polynomial using the gradient descent algorithm.
+ *
+ *  The function to be optimized is given by
+ *
+ *      f(x,y) = x^2 + y^2 + 2x + 8y
+ *
+ *  which has a global minimum at (-1, -4). The required first order gradient is given by 
+ *  Newton-Raphson are given by
+ *
+ *      df/dx = 2x + 2
+ *      df/dy = 2y + 8
+ *
+ *  This example currently uses a constant for each iteration and does not employ and line-searching techniques. Compare
+ *  the results of this example with those of 2d_newtonraphson in terms of number of iterations and accuracy.
  */
-
-//http://pages.cs.wisc.edu/~ferris/cs730/chap3.pdf
 
 int main() {
     
+    // Gradient of polynom
     cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
         cppopt::Matrix d(2, 1);
         
@@ -33,13 +39,15 @@ int main() {
         return d;
     };
     
+    // Start solution
     cppopt::Matrix x(2, 1);
     x(0) = -3.f;
     x(1) = -2.f;
     
-    // Iterate while norm of residual is greater than a user-selected threshold.
-    while (df(x).norm() > 0.001f) {
-        cppopt::gradientDescent(df, x, 0.001f);
+    // Iterate while norm of the first order derivative is greater than some predefined threshold.
+    cppopt::ResultInfo ri = cppopt::SUCCESS;
+    while (ri == cppopt::SUCCESS && df(x).norm() > 0.001f) {
+        ri = cppopt::gradientDescent(df, x, 0.01f);
         std::cout
         << std::fixed << std::setw(3)
         << "Parameters: " << x.transpose()

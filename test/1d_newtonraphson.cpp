@@ -11,7 +11,7 @@
 #include <iostream>
 #include <iomanip>
 
-/** This example finds a local extremum of a third order scalar valued polynomial using the Newton-Raphson algorithm.
+/** This example finds a local extremum of a third order univariate polynomial using the Newton-Raphson algorithm.
  *
  *  The function to be optimized is given by 
  *
@@ -61,7 +61,7 @@ int main() {
     // Iterate while norm of the first order derivative is greater than some predefined threshold.
     cppopt::ResultInfo ri = cppopt::SUCCESS;
     while (ri == cppopt::SUCCESS && df(x).norm() > 0.001f) {
-        cppopt::newtonRaphson(df, ddf, x);
+        ri = cppopt::newtonRaphson(df, ddf, x);
         std::cout
             << std::fixed << std::setw(3)
             << "Parameters: " << x.transpose()

@@ -96,7 +96,7 @@ int main() {
     // Iterate while norm of residual is greater than a user-selected threshold.
     cppopt::ResultInfo ri = cppopt::SUCCESS;
     while (ri == cppopt::SUCCESS && f(x).norm() > 0.01f) {
-        cppopt::gaussNewton(f, df, x);
+        ri = cppopt::gaussNewton(f, df, x);
         std::cout
             << std::fixed << std::setw(3)
             << "Parameters: " << x.transpose()

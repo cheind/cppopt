@@ -11,27 +11,34 @@
 #include <iostream>
 #include <iomanip>
 
-/*
- This example optimizes f(x,y) = x^2 + y^2 + 2x + 8y which has a global minimum at (-1, -4). Since we use 
- Newton-Raphson for optimization, we need the first and second order derivatives, which are
- 
-    First order (Gradient)
-    df/dx = 2x + 2
-    df/dy = 2y + 8
-
-    Second order (Hessian matrix)
-    ddf/ddx = 2
-    ddf/dxdy = 0
-    ddf/dydx = 0
-    ddf/ddy = 2
- 
- As the second order derivative is constant, the optimization will complete in a single step.
+/** This example finds a local extremum of a second order multivariate polynomial using the Newton-Raphson algorithm.
+ *
+ *  The function to be optimized is given by
+ *
+ *      f(x,y) = x^2 + y^2 + 2x + 8y
+ *
+ *  which has a global minimum at (-1, -4). The required first order gradient is given by
+ *  Newton-Raphson are given by
+ *
+ *      df/dx = 2x + 2
+ *      df/dy = 2y + 8
+ *
+ *  For using Newton's method in optimization we also need all second order derivatives (Hessian matrix)
+ *
+ *      ddf/ddx = 2
+ *      ddf/dxdy = 0
+ *      ddf/dydx = 0
+ *      ddf/ddy = 2
+ *
+ *  Note that the above Hessian is constant and does not depend on the function variables. In this case the Newton-Raphson
+ *  will find the extermum in a single step.
+ *
+ *  Compare the results of this example with those of 2d_gradientdescent in terms of number of iterations and accuracy.
  */
-
-
 
 int main() {
 
+    // All first order derivatives. Gradient of polynom
     cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
         cppopt::Matrix d(2, 1);
         
@@ -41,6 +48,7 @@ int main() {
         return d;
     };
     
+    // All second order derivates. Hessian matrix of polynom
     cppopt::F ddf = [](const cppopt::Matrix &x) -> cppopt::Matrix {
         cppopt::Matrix d(2, 2);
         
@@ -52,13 +60,15 @@ int main() {
         return d;
     };
     
+    // Start solution
     cppopt::Matrix x(2, 1);
     x(0) = -3.f;
     x(1) = -2.f;
     
     // Iterate while norm of residual is greater than a user-selected threshold.
-    while (df(x).norm() > 0.001f) {
-        cppopt::newtonRaphson(df, ddf, x);
+    cppopt::ResultInfo ri = cppopt::SUCCESS;
+    while (ri == cppopt::SUCCESS && df(x).norm() > 0.001f) {
+        ri = cppopt::newtonRaphson(df, ddf, x);
         std::cout
             << std::fixed << std::setw(3)
             << "Parameters: " << x.transpose()

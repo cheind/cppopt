@@ -1,8 +1,36 @@
 # cppopt
 
-cppopt is lightweight library for numerical optimization in C++11. The main focus of this library is to provide a concise and easy to follow implementation of various optimisation algorithms.
+cppopt is lightweight library for numerical optimization in C++11. The main focus of this library is to provide a concise and easy to follow implementations of algorithms.
 
-Please bear with me until i come up with a good introduction into this library.
+## Coverage
+
+Currently the following algorithms are implemented for univariate and multivariate functions
+ - Gradient Descent
+ - Newton-Raphson
+ - Gauss-Newton for non-linear least squares.
+
+## Usage
+
+With cppopt functions and derivatives are defined through lambda expression. For example the lambda expression for evaluating the gradient of the multivariate polynom
+    
+    f(x,y) = x^2 + y^2 + 2x + 8y
+
+with 
+
+    df/dx = 2x + 2
+    df/dy = 2y + 8
+
+is given by
+```
+cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
+    cppopt::Matrix d(2, 1);
+        
+    d(0) = 2.f * x(0) + 2.f;
+    d(1) = 2.f * x(1) + 8.f;
+        
+    return d;
+};
+```
 
 ## Links
 Links of interest I found during the course of developing cppopt

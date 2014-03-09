@@ -55,7 +55,7 @@ namespace cppopt {
         
         if (jacobian.rows() != jacobian.cols()) {
             // We do cope with more functions than variables.
-            return INVALID_INPUT;
+            return ERROR;
         }
         
         auto lu = jacobian.fullPivLu();

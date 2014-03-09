@@ -1,6 +1,6 @@
 # cppopt
 
-cppopt is lightweight library for numerical optimization in C++11. The main focus of this library is to provide a concise and easy to follow implementations of algorithms.
+cppopt is lightweight library for numerical optimization in C++11. The main focus of this library is to provide concise and easy to follow implementations of various optimization algorithms. The library can easily be integrated into other projects as it is header only.
 
 ## Coverage
 
@@ -21,7 +21,9 @@ with
     df/dy = 2y + 8
 
 is given by
+
 ```
+// Gradient of f(x,y) = x^2 + y^2 + 2x + 8y
 cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
     cppopt::Matrix d(2, 1);
         
@@ -32,7 +34,23 @@ cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
 };
 ```
 
-## Links
+This lambda expression can then be passed as an argument to various optimization routines as shown below.
+
+```
+// Start solution
+cppopt::Matrix x(2, 1);
+x(0) = -3.f;
+x(1) = -2.f;
+
+// Perform one step using gradient descent
+cppopt::gradientDescent(df, x, 0.01f);
+```
+
+## Dependencies
+
+The only dependency for cppopt is the header only Eigen library (http://eigen.tuxfamily.org).
+
+## Unclassified Links
 Links of interest I found during the course of developing cppopt
 
 http://pages.cs.wisc.edu/~ferris/cs730/chap3.pdf

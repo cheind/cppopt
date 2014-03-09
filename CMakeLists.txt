@@ -12,6 +12,7 @@ set(CPPOPT_HEADERS
     inc/cppopt/newton_raphson.h
     inc/cppopt/gradient_descent.h
     inc/cppopt/gauss_newton.h
+    inc/cppopt/finite_difference.h
 )
 
 # Adapt this string to where your Eigen include directory is located

@@ -17,10 +17,10 @@ namespace cppopt {
     
     /** Performs one step of the numerical minimization using the method of steepest descent.
      *
-     *  Assume f is real-valued possibly multivariate function of x and df/dx exists. Then it 
-     *  can be observed that f decreases fastest in the direction of the negative gradient. A 
-     *  step length parameter, that is allowed to change in every iteration, determines the 
-     *  magnitude of the step taken.
+     *  Assume f is real-valued possibly multivariate function of x and df/dx exists. One can 
+     *  observe that f decreases fastest in the direction of the negative gradient. A step length
+     *  parameter, that is allowed to change in every iteration, determines the magnitude of the 
+     *  step taken.
      *
      *  \param d First order partial derivatives of f at x.
      *           Input: variables given as vector of size Nx1.

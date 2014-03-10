@@ -11,7 +11,7 @@ Currently the following algorithms are implemented for univariate and multivaria
 
 ## Conventions
 
-Let *f* be a [function](http://en.wikipedia.org/wiki/Function_(mathematics) with N dimensional input variables and M dimensional outputs. 
+Let *f* be a [function](http://en.wikipedia.org/wiki/Function_(mathematics)) with N dimensional input variables and M dimensional outputs. 
 We say that 
  - *f* is univariate if `N == 1` and multivariate if `N > 1`
  - *f* is scalar valued if `M == 1` and vector valued if `M > 1`

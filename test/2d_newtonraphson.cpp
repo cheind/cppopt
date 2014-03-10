@@ -38,8 +38,10 @@
 
 int main() {
 
-    // All first order derivatives. Gradient of polynom
+    // Gradient of polynom. 
     cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
+        // Note that Newton-Raphson actually expects a function and not its derivative.
+        // We therefore must return the gradient as column vector instead of a row vector.
         cppopt::Matrix d(2, 1);
         
         d(0) = 2.f * x(0) + 2.f;

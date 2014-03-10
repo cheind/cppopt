@@ -24,12 +24,12 @@ namespace cppopt {
      *
      *  \param d First order partial derivatives of f at x.
      *           Input: variables given as vector of size Nx1.
-     *           Output: all partial derivates of f at x given as matrix of size MxN.
+     *           Output: all partial derivates of f at x given as row vector 1xN.
      *  \param x Variables of function f given as vector of size Nx1 vector. Will be updated in case of success.
      *  \return Status indicating success or failure due to ill-conditioned input.
      */
     ResultInfo gradientDescent(const F &d, Matrix &x, Scalar step) {
-        x = x - step * d(x);
+        x = x - step * d(x).transpose();
         return SUCCESS;
     }
 }

@@ -53,7 +53,7 @@ namespace cppopt {
     ResultInfo newtonRaphson(const F &f, const F &d, Matrix &x) {
         Matrix jacobian = d(x);
         
-        if (jacobian.rows() != jacobian.cols()) {
+        if (jacobian.rows() > jacobian.cols()) {
             // We do cope with more functions than variables.
             return ERROR;
         }

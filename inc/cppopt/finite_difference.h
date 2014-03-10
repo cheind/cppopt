@@ -51,7 +51,7 @@ namespace cppopt {
     /** Approximates the first order derivative for a multivariate scalar valued function using forward difference. */
     template<>
     Matrix forward_difference<1>(const F & f, const Matrix &x) {
-        Matrix d(x.rows(), 1);
+        Matrix d(1, x.rows());
         Matrix h(x.rows(), 1);
     
         for (int i = 0; i < x.rows(); ++i) {
@@ -59,7 +59,7 @@ namespace cppopt {
             
             const Scalar dx = internal::findSuitableH(x(i));
             h(i, 0) = dx;
-            d(i, 0) = (f(x + h) - f(x))(0) / dx;
+            d(0, i) = (f(x + h) - f(x))(0) / dx;
         }
         
         return d;

@@ -9,6 +9,24 @@ Currently the following algorithms are implemented for univariate and multivaria
  - Newton-Raphson
  - Gauss-Newton for non-linear least squares.
 
+## Conventions
+
+Let *f* be a [function](http://en.wikipedia.org/wiki/Function_(mathematics) with N dimensional input variables and M dimensional outputs. 
+We say that 
+ - *f* is univariate if `N == 1` and multivariate if `N > 1`
+ - *f* is scalar valued if `M == 1` and vector valued if `M > 1`
+
+The first order derivatives of a multivariate scalar valued function is called the [gradient vector](http://en.wikipedia.org/wiki/Gradient). 
+The first order derivatives of a vector valued function is called the [Jacobian](http://de.wikipedia.org/wiki/Jacobi-Matrix) matrix. 
+The second order derivatives of a multivariate scalar valued function is called the [Hessian](http://en.wikipedia.org/wiki/Hessian_matrix) matrix.
+
+Throughout cppopt we use the following conventions
+ - input variables are repesented by Nx1 column vectors
+ - outputs are represented by Mx1 column vectors
+ - gradients are represented by 1xN row vectors
+ - Jacobians are represented by MxN matrices
+ - Hessians are represented by NxN matrices
+
 ## Usage
 
 With cppopt functions and derivatives are defined through lambda expression. For example the lambda expression for evaluating the gradient of the multivariate polynom
@@ -25,7 +43,7 @@ is given by
 ```
 // Gradient of f(x,y) = x^2 + y^2 + 2x + 8y
 cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
-    cppopt::Matrix d(2, 1);
+    cppopt::Matrix d(1, 2);
         
     d(0) = 2.f * x(0) + 2.f;
     d(1) = 2.f * x(1) + 8.f;

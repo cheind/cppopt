@@ -21,11 +21,11 @@ The first order derivatives of a vector valued function is called the [Jacobian]
 The second order derivatives of a multivariate scalar valued function is called the [Hessian](http://en.wikipedia.org/wiki/Hessian_matrix) matrix.
 
 Throughout cppopt we use the following conventions
- - input variables are repesented by Nx1 column vectors
- - outputs are represented by Mx1 column vectors
- - gradients are represented by 1xN row vectors
- - Jacobians are represented by MxN matrices
- - Hessians are represented by NxN matrices
+ - input variables are repesented by `Nx1` column vectors
+ - outputs are represented by `Mx1` column vectors
+ - gradients are represented by `1xN` row vectors
+ - Jacobians are represented by `MxN` matrices
+ - Hessians are represented by `NxN` matrices
 
 ## Usage
 
@@ -40,29 +40,27 @@ with
 
 is given by
 
-```
-// Gradient of f(x,y) = x^2 + y^2 + 2x + 8y
-cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
-    cppopt::Matrix d(1, 2);
+    // Gradient of f(x,y) = x^2 + y^2 + 2x + 8y
+    cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
+        cppopt::Matrix d(1, 2);
         
-    d(0) = 2.f * x(0) + 2.f;
-    d(1) = 2.f * x(1) + 8.f;
+        d(0) = 2.f * x(0) + 2.f;
+        d(1) = 2.f * x(1) + 8.f;
         
-    return d;
-};
-```
+        return d;
+    };
+
 
 This lambda expression can then be passed as an argument to various optimization routines as shown below.
 
-```
-// Start solution
-cppopt::Matrix x(2, 1);
-x(0) = -3.f;
-x(1) = -2.f;
+    // Start solution
+    cppopt::Matrix x(2, 1);
+    x(0) = -3.f;
+    x(1) = -2.f;
 
-// Perform one step using gradient descent
-cppopt::gradientDescent(df, x, 0.01f);
-```
+    // Perform one step using gradient descent
+    cppopt::gradientDescent(df, x, 0.01f);
+
 
 ## Dependencies
 

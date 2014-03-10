@@ -23,7 +23,7 @@ The second order derivatives of a multivariate scalar valued function is called 
 Throughout cppopt we use the following conventions
  - input variables are repesented by `Nx1` column vectors
  - outputs are represented by `Mx1` column vectors
- - gradients are represented by `1xN` row vectors
+ - gradients are represented by `Nx1` column vectors
  - Jacobians are represented by `MxN` matrices
  - Hessians are represented by `NxN` matrices
 
@@ -42,7 +42,7 @@ is given by
 
     // Gradient of f(x,y) = x^2 + y^2 + 2x + 8y
     cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
-        cppopt::Matrix d(1, 2);
+        cppopt::Matrix d(2, 1);
         
         d(0) = 2.f * x(0) + 2.f;
         d(1) = 2.f * x(1) + 8.f;

@@ -31,7 +31,7 @@ int main() {
     
     // Gradient of polynom
     cppopt::F df = [](const cppopt::Matrix &x) -> cppopt::Matrix {
-        cppopt::Matrix d(1, 2);
+        cppopt::Matrix d(2, 1);
         
         d(0) = 2.f * x(0) + 2.f;
         d(1) = 2.f * x(1) + 8.f;

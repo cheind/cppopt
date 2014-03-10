@@ -11,6 +11,7 @@
 #define CPPOPT_FINITE_DIFFERENCE
 
 #include "types.h"
+#include <iostream>
 #include <limits>
 
 namespace cppopt {
@@ -36,34 +37,110 @@ namespace cppopt {
             // Note this dance is only necessary due to numerical rounding issues.
             // See http://en.wikipedia.org/wiki/Numerical_differentiation for details.
             
-            const T eps = static_cast<T>(sqrt(std::numeric_limits<T>::epsilon()));
-            const T h = eps * x;
+            //const T eps = static_cast<T>(sqrt(std::numeric_limits<T>::epsilon()));
+            /*const T h = 0.00001f;
+            //const T h = eps * x;
             volatile T xph = x + h;
-            return xph - x;
+            return xph - x;*/
+
+            return 0.001f;
             
         }  
     }
     
     /** Approximates the nth order derivative for a multivariate scalar valued function using forward difference. */
     template<int Order>
-    Matrix forward_difference(const F & f, const Dims &dims, const Matrix &x);
-    
-    /** Approximates the first order derivative for a multivariate scalar valued function using forward difference. */
+    class ApproximateForwardDerivative {};
+
+    /** Numerical approximation of the first order partial derivatives. 
+      *
+      * This method works for real and vector valued functions that are either
+      * univariate or multivariate.
+      */
     template<>
-    Matrix forward_difference<1>(const F & f, const Dims &dims, const Matrix &x) {
-        Matrix d(dims.y_rows, dims.x_rows);
-        Matrix h(dims.x_rows, 1);
-    
-        for (int i = 0; i < x.rows(); ++i) {
-            h.setZero();
-            
-            const Scalar dx = internal::findSuitableH(x(i));
-            h(i, 0) = dx;
-            d.col(i) = (f(x + h) - f(x)) / dx;
-        }
+    class ApproximateForwardDerivative<1> {
+    public:
         
-        return d;
-    }
+        /** Initialize */
+        ApproximateForwardDerivative(const F & f, const Dims &dims) 
+            : _f(f), _dims(dims)
+        {}
+
+        /** Calculate the first order derivative around x.*/
+        Matrix operator()(const Matrix &x) const
+        {
+            Matrix d(_dims.y_rows, _dims.x_rows);
+            Matrix offset(_dims.x_rows, 1);
+
+            for (int i = 0; i < x.rows(); ++i) {
+                offset.setZero();
+            
+                const Scalar dx = internal::findSuitableH(x(i));
+                offset(i, 0) = dx;               
+                d.col(i) = (_f(x + offset) - _f(x)) / dx;
+            }
+
+            // By definition of cppopt gradient vectors are column vectors, whereas the 
+            // Jacobian is defined by having the partial derivates in columns.
+            if (d.rows() == 1) {
+                return d.transpose();
+            } else {
+                return d;
+            }
+        }
+
+    private:
+        F _f;
+        Dims _dims;
+    };
+
+    /** Numerical approximation of the second order partial derivatives. 
+      *
+      * This method works for real valued functions that are either
+      * univariate or multivariate.
+      *
+      * This method repeatedly calls ApproximateForwardDerivative<1> using first
+      * order derivative approximation of the input function.
+    template<>
+    class ApproximateForwardDerivative<2> {
+    public:
+        
+        ApproximateForwardDerivative(const F & f, const Dims &dims) 
+            : _f(f), _dims(dims)
+        {
+        }
+
+        Matrix operator()(const Matrix &x) const
+        {
+            const ApproximateForwardDerivative<1> df(_f, _dims);
+
+            Matrix d(_dims.x_rows, _dims.x_rows);
+            Matrix offset(_dims.x_rows, 1);
+
+            for (int i = 0; i < x.rows(); ++i) {
+                offset.setZero();
+            
+                const Scalar dx = internal::findSuitableH(x(i));
+                offset(i, 0) = dx;
+                d.col(i) = (df(x + offset) - df(x)) / dx;
+            }
+
+            // By definition of cppopt gradient vectors are column vectors, whereas the 
+            // Jacobian is defined by having the partial derivates in columns.
+            if (d.rows() == 1) {
+                return d.transpose();
+            } else {
+                return d;
+            }
+
+            return d;
+        }
+
+    private:
+        F _f;
+        Dims _dims;
+    };
+          */
 }
 
 #endif

@@ -7,20 +7,23 @@
 // If a copy of the MPL was not distributed with this file, You can obtain
 // one at http://opensource.org/licenses/BSD-3-Clause.
 
-#ifndef CPPOPT_FINITE_DIFFERENCE
-#define CPPOPT_FINITE_DIFFERENCE
+#ifndef CPPOPT_NUMERICAL_DERIVATIVE
+#define CPPOPT_NUMERICAL_DERIVATIVE
 
 #include "types.h"
-#include <iostream>
 #include <limits>
 
 namespace cppopt {
     
     namespace internal {
         
+        template<int Order>
+        Scalar findSuitableCentralH(Scalar x);
+        
+        
         /** Helper method to find a suitable H value that determines the step size in numerical differentation.
          *
-         *  The returned value depends on the datatype and  value of the variable it is calculated for. Caution is taken 
+         *  The returned value depends on the datatype and  value of the variable it is calculated for. Caution is taken
          *  to generate a number that
          *   - small
          *   - machine representable
@@ -31,17 +34,17 @@ namespace cppopt {
          * \param x value to generate h for
          * \return h
          */
-        template<class T>
-        T findSuitableH(T x) {
+        template<>
+        Scalar findSuitableCentralH<1>(Scalar x) {
             
             // Note this dance is only necessary due to numerical rounding issues.
             // See http://en.wikipedia.org/wiki/Numerical_differentiation for details.
             
-            const T eps = static_cast<T>(sqrt(std::numeric_limits<T>::epsilon()));
-            const T h = eps * x;
-            volatile T xph = x + h;
-            return xph - x;   
+            const Scalar eps = static_cast<Scalar>(sqrt(std::numeric_limits<Scalar>::epsilon()));
+            return eps;
         }
+        
+        
 
         /** Utility class to evaluate functions at differences specified by offsets */
         class FiniteDifferenceHelper {
@@ -98,7 +101,7 @@ namespace cppopt {
             internal::FiniteDifferenceHelper fdh(_f, _dims);
 
             for (int i = 0; i < x.rows(); ++i) {
-                const Scalar dx = internal::findSuitableH(x(i));             
+                const Scalar dx = internal::findSuitableCentralH<1>(x(i));
                 d.col(i) = (fdh(x, i, dx) - fdh(x, i, -dx)) / (Scalar(2) * dx);
             }
 

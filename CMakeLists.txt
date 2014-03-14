@@ -12,7 +12,7 @@ set(CPPOPT_HEADERS
     inc/cppopt/newton_raphson.h
     inc/cppopt/gradient_descent.h
     inc/cppopt/gauss_newton.h
-    inc/cppopt/finite_difference.h
+    inc/cppopt/numerical_derivative.h
 )
 
 # Adapt this string to where your Eigen include directory is located
@@ -24,3 +24,11 @@ add_executable(1d_newtonraphson ${CPPOPT_HEADERS} examples/1d_newtonraphson.cpp)
 add_executable(2d_newtonraphson ${CPPOPT_HEADERS} examples/2d_newtonraphson.cpp)
 add_executable(nlls_gaussnewton_fitcircle ${CPPOPT_HEADERS} examples/nlls_gaussnewton_fitcircle.cpp)
 add_executable(nlls_gaussnewton_findrotation ${CPPOPT_HEADERS} examples/nlls_gaussnewton_findrotation.cpp)
+
+set(CPPOPT_TESTS
+    tests/main.cpp
+    tests/test_numerical_derivatives.cpp
+)
+
+include_directories(tests)
+add_executable(cppopt_tests ${CPPOPT_HEADERS} ${CPPOPT_TESTS})

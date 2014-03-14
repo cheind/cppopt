@@ -74,6 +74,9 @@ int main() {
             << "Parameters: " << x.transpose()
             << " Error: " << df(x).norm() << std::endl;
     }
+    
+    assert(fabs(x(0) - cppopt::Scalar(-1)) < cppopt::Scalar(0.001));
+    assert(fabs(x(1) - cppopt::Scalar(-4)) < cppopt::Scalar(0.001));
 
     return 0;
 }

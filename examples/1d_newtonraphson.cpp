@@ -70,5 +70,7 @@ int main() {
     
     std::cout << "Found a " << (ddf(x)(0) < 0.f ? "Maximum" : "Minimum") << std::endl;
     
+    assert(fabs(x(0) - cppopt::Scalar(3.841)) < cppopt::Scalar(0.001));
+    
     return 0;
 }

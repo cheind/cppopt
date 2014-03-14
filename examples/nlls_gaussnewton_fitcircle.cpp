@@ -103,5 +103,9 @@ int main() {
             << " Error: " << f(x).norm() << std::endl;
     }
     
+    assert(fabs(x(0) - cppopt::Scalar(2)) < cppopt::Scalar(0.001));
+    assert(fabs(x(1) - cppopt::Scalar(1.5)) < cppopt::Scalar(0.001));
+    assert(fabs(x(2) - cppopt::Scalar(8)) < cppopt::Scalar(0.001));
+    
     return 0;
 }

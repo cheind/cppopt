@@ -145,6 +145,8 @@ int main() {
             << "Parameters: " << x.transpose()
             << " Error: " << f(x).norm() << std::endl;
     }
+    
+    assert(fabs(x(0) - cppopt::Scalar(-0.3)) < cppopt::Scalar(0.001));
 
     return 0;
     

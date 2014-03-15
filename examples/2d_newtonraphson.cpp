@@ -66,6 +66,8 @@ int main() {
     x(1) = -2.f;
     
     // Iterate while norm of residual is greater than a user-selected threshold.
+    // Note the function is quadric and by definition the method will find the global minimum then
+    // in a single iteration.
     cppopt::ResultInfo ri = cppopt::SUCCESS;
     while (ri == cppopt::SUCCESS && df(x).norm() > 0.001f) {
         ri = cppopt::newtonRaphson(df, ddf, x);

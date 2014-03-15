@@ -32,17 +32,107 @@ TEST_CASE("Univariate Newton Raphson Maximum / Minimum Finding") {
     x(0) = co::Scalar(-0.5);
     for (int i = 0; i < 10; ++i)
         REQUIRE( co::newtonRaphson(UnivariateSample::getDerivative(), UnivariateSample::getSecondDerivative(), x) == co::SUCCESS);
-    REQUIRE( fabs(x(0) - 0.0) < 0.001);
+    REQUIRE(fabs(x(0) - 0.0) < 0.001);
     
     // Start at x = -0.7, should yield x = -2.8024 (Maximum)
     x(0) = co::Scalar(-0.7);
     for (int i = 0; i < 10; ++i)
         REQUIRE( co::newtonRaphson(UnivariateSample::getDerivative(), UnivariateSample::getSecondDerivative(), x) == co::SUCCESS);
-    REQUIRE( fabs(x(0) - -2.8024) < 0.001);
+    REQUIRE(fabs(x(0) - -2.8024) < 0.001);
     
     // Start at x = 2, should yield 2.17080
     x(0) = co::Scalar(2);
     for (int i = 0; i < 10; ++i)
         REQUIRE( co::newtonRaphson(UnivariateSample::getDerivative(), UnivariateSample::getSecondDerivative(), x) == co::SUCCESS);
-    REQUIRE( fabs(x(0) - 2.17080) < 0.01);
+    REQUIRE(fabs(x(0) - 2.17080) < 0.01);
 }
+
+TEST_CASE("Newton Raphson Single Step Solutions") {
+    
+    {
+        // By definition of the method the root of a linear function should be found in a single step
+        // no matter of the starting condition.
+        co::Matrix x(1, 1);
+        x(0) = co::Scalar(-20.0);
+        
+        co::F f = [](const co::Matrix &x) -> co::Matrix {
+            co::Matrix r(1, 1);
+            r(0) = co::Scalar(2.5) * x(0) - co::Scalar(3);
+            return r;
+        };
+    
+        co::F d = [](const co::Matrix &x) -> co::Matrix {
+            co::Matrix r(1, 1);
+            r(0) = co::Scalar(2.5);
+            return r;
+        };
+        
+        REQUIRE(co::newtonRaphson(f, d, x) == co::SUCCESS);
+        REQUIRE(fabs(x(0) - 1.2) < 0.0001);
+    }
+    
+    {
+        // By definition of the method the minimum of a quadric function should be found in a single step,
+        // independent of the starting position
+        co::Matrix x(1, 1);
+        x(0) = co::Scalar(-20);
+        
+        co::F f = [](const co::Matrix &x) -> co::Matrix {
+            co::Matrix r(1, 1);
+            r(0) = co::Scalar(2) * x(0) * x(0) - co::Scalar(3) * x(0) - co::Scalar(5);
+            return r;
+        };
+        
+        co::F d = [](const co::Matrix &x) -> co::Matrix {
+            co::Matrix r(1, 1);
+            r(0) = co::Scalar(4) * x(0) - co::Scalar(3);
+            return r;
+        };
+        
+        co::F dd = [](const co::Matrix &x) -> co::Matrix {
+            co::Matrix r(1, 1);
+            r(0) = co::Scalar(4);
+            return r;
+        };
+        
+        REQUIRE(co::newtonRaphson(d, dd, x) == co::SUCCESS);
+        REQUIRE(fabs(x(0) - 0.75) < 0.0001);
+        REQUIRE(fabs(f(x)(0) - -6.125) < 0.0001);
+    }
+    
+    {
+        // By definition of the method the minimum of a multivariate quadric function should be found in a single step,
+        // independent of the start position
+        
+        co::Matrix x(2, 1);
+        x(0) = co::Scalar(-20);
+        x(1) = co::Scalar(-20);
+        
+        co::F d = [](const cppopt::Matrix &x) -> cppopt::Matrix {
+            co::Matrix d(2, 1);
+            
+            d(0) = co::Scalar(2) * x(0) + co::Scalar(2);
+            d(1) = co::Scalar(2) * x(1) + co::Scalar(8);
+            
+            return d;
+        };
+        
+        co::F dd = [](const cppopt::Matrix &x) -> cppopt::Matrix {
+            co::Matrix d(2, 2);
+            
+            d(0,0) = co::Scalar(2);
+            d(0,1) = co::Scalar(0);
+            d(1,0) = co::Scalar(0);
+            d(1,1) = co::Scalar(2);
+            
+            return d;
+        };
+        
+        REQUIRE(co::newtonRaphson(d, dd, x) == co::SUCCESS);
+        REQUIRE(fabs(x(0) - -1) < 0.0001);
+        REQUIRE(fabs(x(1) - -4) < 0.0001);
+    }
+    
+}
+
+

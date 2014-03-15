@@ -32,6 +32,7 @@ set(CPPOPT_TESTS
     tests/test_numerical_derivatives.cpp
     tests/test_gradient_descent.cpp
     tests/test_newton_raphson.cpp
+    tests/test_gauss_newton.cpp
 )
 
 include_directories(tests)

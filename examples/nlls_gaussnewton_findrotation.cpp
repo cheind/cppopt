@@ -53,6 +53,9 @@
 /** Any affine transform in 2D */
 typedef Eigen::Transform<cppopt::Scalar, 2, Eigen::Affine> AffineTransform2D;
 
+/** Vector of two dimensions */
+typedef Eigen::Matrix<cppopt::Scalar, 2, 1> Vector2D;
+
 /** Generate two-dimensional point sets to be aligned via a rotation.
  *
  * \param pointsModel points of model.
@@ -75,8 +78,8 @@ void generatePointSets(cppopt::Matrix &pointsModel, cppopt::Matrix &pointsScene,
     
     pointsScene.resize(pointsModel.rows(), 2);
     for (int i = 0; i < pointsModel.rows(); ++i) {
-        Eigen::Vector2f noise(nd(generator), nd(generator));
-        pointsScene.row(i) = torig * (Eigen::Vector2f(pointsModel.row(i)) + noise);
+        Vector2D noise(nd(generator), nd(generator));
+        pointsScene.row(i) = torig * (Vector2D(pointsModel.row(i)) + noise);
     }
 }
 
@@ -94,10 +97,10 @@ int main() {
         AffineTransform2D t;
         t.setIdentity();
         t.rotate(x(0));
-
+        
         for (int i = 0; i < y.rows(); ++i) {
-            Eigen::Vector2f m = mp.row(i);
-            Eigen::Vector2f s = sp.row(i);
+            Vector2D m = mp.row(i);
+            Vector2D s = sp.row(i);
             y(i) = (m - t * s).norm();
         }
        
@@ -118,10 +121,10 @@ int main() {
                         0, 0, 1;
         
         for (int i = 0; i < d.rows(); ++i) {
-            Eigen::Vector2f m = mp.row(i);
-            Eigen::Vector2f s = sp.row(i);
-            Eigen::Vector2f k = m - t * s;
-            Eigen::Vector2f kd = dt * s * -1.f;
+            Vector2D m = mp.row(i);
+            Vector2D s = sp.row(i);
+            Vector2D k = m - t * s;
+            Vector2D kd = dt * s * -1.f;
 
             cppopt::Scalar nom = (k.transpose() * kd + kd.transpose() * k)(0);
             cppopt::Scalar denom = 2.f * k.norm();

@@ -24,7 +24,7 @@ TEST_CASE("Univariate gradient descent") {
         REQUIRE( co::gradientDescent(UnivariateTestSample::getDerivative(), x, co::Scalar(0.1)) == co::SUCCESS);
     REQUIRE( fabs(x(0) - 0.0) < 0.01);
     
-    // Start at x = 2, should yield
+    // Start at x = 2, should yield x = 2.17080
     x(0) = co::Scalar(2);
     for (int i = 0; i < 20; ++i)
         REQUIRE( co::gradientDescent(UnivariateTestSample::getDerivative(), x, co::Scalar(0.1)) == co::SUCCESS);

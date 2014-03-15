@@ -28,6 +28,7 @@ add_executable(nlls_gaussnewton_findrotation ${CPPOPT_HEADERS} examples/nlls_gau
 set(CPPOPT_TESTS
     tests/main.cpp
     tests/univariate_function.h
+    tests/multivariate_function.h
     tests/test_numerical_derivatives.cpp
     tests/test_gradient_descent.cpp
     tests/test_newton_raphson.cpp

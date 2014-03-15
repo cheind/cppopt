@@ -9,8 +9,9 @@
 
 #include "catch.hpp"
 
-#include "univariate_function.h"
 #include <cppopt/newton_raphson.h>
+#include "univariate_function.h"
+#include "multivariate_function.h"
 
 namespace co = cppopt;
 
@@ -20,7 +21,7 @@ TEST_CASE("Univariate Newton Raphson Root Finding") {
     // Start at x = -0.5, should yield x = 0
     x(0) = co::Scalar(-0.5);
     for (int i = 0; i < 10; ++i)
-        REQUIRE( co::newtonRaphson(UnivariateSample::getFunction(), UnivariateSample::getDerivative(), x) == co::SUCCESS);
+        REQUIRE( co::newtonRaphson(UnivariateTestSample::getFunction(), UnivariateTestSample::getDerivative(), x) == co::SUCCESS);
     REQUIRE( fabs(x(0) - 0.0) < 0.001);
     
 }
@@ -31,19 +32,19 @@ TEST_CASE("Univariate Newton Raphson Maximum / Minimum Finding") {
     // Start at x = -0.5, should yield x = 0 (Minimum)
     x(0) = co::Scalar(-0.5);
     for (int i = 0; i < 10; ++i)
-        REQUIRE( co::newtonRaphson(UnivariateSample::getDerivative(), UnivariateSample::getSecondDerivative(), x) == co::SUCCESS);
+        REQUIRE( co::newtonRaphson(UnivariateTestSample::getDerivative(), UnivariateTestSample::getSecondDerivative(), x) == co::SUCCESS);
     REQUIRE(fabs(x(0) - 0.0) < 0.001);
     
     // Start at x = -0.7, should yield x = -2.8024 (Maximum)
     x(0) = co::Scalar(-0.7);
     for (int i = 0; i < 10; ++i)
-        REQUIRE( co::newtonRaphson(UnivariateSample::getDerivative(), UnivariateSample::getSecondDerivative(), x) == co::SUCCESS);
+        REQUIRE( co::newtonRaphson(UnivariateTestSample::getDerivative(), UnivariateTestSample::getSecondDerivative(), x) == co::SUCCESS);
     REQUIRE(fabs(x(0) - -2.8024) < 0.001);
     
     // Start at x = 2, should yield 2.17080
     x(0) = co::Scalar(2);
     for (int i = 0; i < 10; ++i)
-        REQUIRE( co::newtonRaphson(UnivariateSample::getDerivative(), UnivariateSample::getSecondDerivative(), x) == co::SUCCESS);
+        REQUIRE( co::newtonRaphson(UnivariateTestSample::getDerivative(), UnivariateTestSample::getSecondDerivative(), x) == co::SUCCESS);
     REQUIRE(fabs(x(0) - 2.17080) < 0.01);
 }
 
@@ -132,7 +133,35 @@ TEST_CASE("Newton Raphson Single Step Solutions") {
         REQUIRE(fabs(x(0) - -1) < 0.0001);
         REQUIRE(fabs(x(1) - -4) < 0.0001);
     }
+}
+
+TEST_CASE("Multivariate Newton Raphson Maximum / Minimum Finding") {
     
+    cppopt::Matrix x(2, 1);
+    
+    // Start at (1.3,-0.1) should converge to nearest maximum at (pi/2, 0)
+    x(0) = co::Scalar(1.3);
+    x(1) = co::Scalar(-0.1);
+    for (int i = 0; i < 10; ++i)
+        REQUIRE(co::newtonRaphson(MultivariateTestSample::getDerivative(), MultivariateTestSample::getSecondDerivative(), x) == co::SUCCESS);
+    
+    REQUIRE(fabs(x(0) - 3.141592/2) < 0.001);
+    REQUIRE(fabs(x(1) - 0) < 0.001);
+    
+    // Start at (-2,3) should converge to nearest minimum at (-pi/2, pi)
+    x(0) = co::Scalar(-2);
+    x(1) = co::Scalar(3);
+    for (int i = 0; i < 10; ++i)
+        REQUIRE(co::newtonRaphson(MultivariateTestSample::getDerivative(), MultivariateTestSample::getSecondDerivative(), x) == co::SUCCESS);
+    
+    REQUIRE(fabs(x(0) - -3.141592/2) < 0.001);
+    REQUIRE(fabs(x(1) - 3.141592) < 0.001);
+    
+    
+    // Start at (0,0) should fail, because the Jacobian will become degenerate. Should this be handled in some way?
+    x(0) = co::Scalar(0);
+    x(1) = co::Scalar(0);
+    REQUIRE(co::newtonRaphson(MultivariateTestSample::getDerivative(), MultivariateTestSample::getSecondDerivative(), x) == co::ERROR);
 }
 
 

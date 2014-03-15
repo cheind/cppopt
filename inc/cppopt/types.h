@@ -18,6 +18,9 @@ namespace cppopt {
     /** Default precision */
     typedef float Scalar;
     
+    /** Shortcut for scalar */
+    typedef Scalar S;
+    
     /** Default matrix type */
     typedef Eigen::Matrix< Scalar, Eigen::Dynamic, Eigen::Dynamic > Matrix;
     
